@@ -20,6 +20,15 @@
         height: 100vh;
     }
 
+    .codeBox__wrapper {
+        display: flex;
+        max-width: 680px;
+        width: 100%;
+        flex-direction: column;
+        gap: 2em;
+        align-items: center;
+    }
+
     code {
         user-select: none;
         pointer-events: none;
@@ -33,13 +42,8 @@
         margin-top: 20px;
     }
 
-    .codeBox__wrapper {
-        display: flex;
-        max-width: 980px;
-        width: 100%;
-        flex-direction: column;
-        gap: 2em;
-        align-items: center;
+    .codeBox code {
+        padding: 1em 0;
     }
 
     .copy-button {
@@ -109,9 +113,7 @@
         </header>
         <div class="codeBox__wrapper">
             <div class="codeBox">
-                <pre>
-                    <code class="language-javascript" id="code"></code>
-                </pre>
+                <pre><code class="language-javascript" id="code"></code></pre>
             </div>
             <button class='copy-button' onclick="copyToClipboard()">
                 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
