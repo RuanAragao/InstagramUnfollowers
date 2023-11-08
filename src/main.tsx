@@ -265,6 +265,33 @@ function App() {
         }
     };
 
+    // it will work the same as toggleAllUsers, but it will select everyone on the current page.
+    const toggleCurrentePageUsers = (e: ChangeEvent<HTMLInputElement>) => {
+        if (state.status !== 'scanning') {
+            return;
+        }
+        if (e.currentTarget.checked) {
+            setState({
+                ...state,
+                selectedResults: getCurrentPageUnfollowers(
+                    getUsersForDisplay(
+                        state.results,
+                        state.whitelistedResults,
+                        state.currentTab,
+                        state.searchTerm,
+                        state.filter,
+                    ),
+                    state.page,
+                ),
+            });
+        } else {
+            setState({
+                ...state,
+                selectedResults: [],
+            });
+        }
+    };
+
     useEffect(() => {
         const onBeforeUnload = (e: BeforeUnloadEvent) => {
             // Prompt user if he tries to leave while in the middle of a process (searching / unfollowing / etc..)
@@ -830,6 +857,28 @@ function App() {
                         />
                         {state.status === 'scanning' && (
                             <input
+                                title='Select all on this page'
+                                type='checkbox'
+                                // Avoid allowing to select all before scan completed to avoid confusion
+                                // regarding what exactly is selected while scanning in progress.
+                                disabled={state.percentage < 100}
+                                checked={
+                                    state.selectedResults.length ===
+                                    getUsersForDisplay(
+                                        state.results,
+                                        state.whitelistedResults,
+                                        state.currentTab,
+                                        state.searchTerm,
+                                        state.filter,
+                                    ).length
+                                }
+                                className='toggle-all-checkbox'
+                                onClick={toggleCurrentePageUsers}
+                            />
+                        )}
+                        {state.status === 'scanning' && (
+                            <input
+                                title='Select all'
                                 type='checkbox'
                                 // Avoid allowing to select all before scan completed to avoid confusion
                                 // regarding what exactly is selected while scanning in progress.
