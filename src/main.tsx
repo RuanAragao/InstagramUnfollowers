@@ -645,7 +645,7 @@ function App() {
                                                 <a
                                                     className='fs-xlarge'
                                                     target='_blank'
-                                                    href={`../${user.username}`}
+                                                    href={`/${user.username}`}
                                                     rel='noreferrer'
                                                 >
                                                     {user.username}
