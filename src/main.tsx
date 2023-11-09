@@ -98,6 +98,18 @@ function getUnfollowLogForDisplay(log: readonly UnfollowLogEntry[], searchTerm: 
     return entries;
 }
 
+// pause
+let scanningPaused = false;
+function pauseScan() {
+    scanningPaused = !scanningPaused;
+}
+
+// stop
+function stopScan() {
+    console.log('stop clicked');
+}
+
+
 type ScanningTab = 'non_whitelisted' | 'whitelisted';
 
 interface ScanningFilter {
@@ -119,27 +131,27 @@ interface UnfollowLogEntry {
 
 type State =
     | {
-          readonly status: 'initial';
-      }
+        readonly status: 'initial';
+    }
     | {
-          readonly status: 'scanning';
-          readonly page: number;
-          readonly currentTab: ScanningTab;
-          readonly searchTerm: string;
-          readonly percentage: number;
-          readonly results: readonly Node[];
-          readonly whitelistedResults: readonly Node[];
-          readonly selectedResults: readonly Node[];
-          readonly filter: ScanningFilter;
-      }
+        readonly status: 'scanning';
+        readonly page: number;
+        readonly currentTab: ScanningTab;
+        readonly searchTerm: string;
+        readonly percentage: number;
+        readonly results: readonly Node[];
+        readonly whitelistedResults: readonly Node[];
+        readonly selectedResults: readonly Node[];
+        readonly filter: ScanningFilter;
+    }
     | {
-          readonly status: 'unfollowing';
-          readonly searchTerm: string;
-          readonly percentage: number;
-          readonly selectedResults: readonly Node[];
-          readonly unfollowLog: readonly UnfollowLogEntry[];
-          readonly filter: UnfollowFilter;
-      };
+        readonly status: 'unfollowing';
+        readonly searchTerm: string;
+        readonly percentage: number;
+        readonly selectedResults: readonly Node[];
+        readonly unfollowLog: readonly UnfollowLogEntry[];
+        readonly filter: UnfollowFilter;
+    };
 
 function App() {
     const [state, setState] = useState<State>({
@@ -359,6 +371,11 @@ function App() {
                     };
                     return newState;
                 });
+
+                while (scanningPaused) {
+                    await sleep(300);
+                    console.log('paused');
+                }
 
                 await sleep(Math.floor(Math.random() * (1000 - 600)) + 1000);
                 scrollCycle++;
@@ -586,6 +603,21 @@ function App() {
                         >
                             UNFOLLOW ({state.selectedResults.length})
                         </button>
+                        {/* Scan controls */}
+                        <div className='controls'>
+                            <button
+                                className='button-control button-pause'
+                                onClick={pauseScan}>
+                                    {scanningPaused ? 'Resume' : 'Pause'}
+                            </button>
+                            <button
+                                className='button-control
+                                button-stop'
+                                onClick={stopScan}
+                                disabled={state.status !== 'scanning'}>
+                                    Stop
+                            </button>
+                        </div>
                     </aside>
                     <article className='results-container'>
                         <nav className='tabs-container'>
