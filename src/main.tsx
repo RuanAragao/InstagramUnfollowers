@@ -881,7 +881,10 @@ function App() {
                                 type='checkbox'
                                 // Avoid allowing to select all before scan completed to avoid confusion
                                 // regarding what exactly is selected while scanning in progress.
-                                disabled={state.percentage < 100}
+                                disabled={
+                                    // if paused, allow to select all even if scan is not completed.
+                                    (!scanningPaused && state.percentage < 100) || !scanningPaused
+                                }
                                 checked={
                                     state.selectedResults.length ===
                                     getUsersForDisplay(
@@ -902,7 +905,10 @@ function App() {
                                 type='checkbox'
                                 // Avoid allowing to select all before scan completed to avoid confusion
                                 // regarding what exactly is selected while scanning in progress.
-                                disabled={state.percentage < 100}
+                                disabled={
+                                    // if paused, allow to select all even if scan is not completed.
+                                    (!scanningPaused && state.percentage < 100) || !scanningPaused
+                                }
                                 checked={
                                     state.selectedResults.length ===
                                     getUsersForDisplay(
