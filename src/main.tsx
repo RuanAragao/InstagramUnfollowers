@@ -104,12 +104,6 @@ function pauseScan() {
     scanningPaused = !scanningPaused;
 }
 
-// stop
-function stopScan() {
-    console.log('stop clicked');
-}
-
-
 type ScanningTab = 'non_whitelisted' | 'whitelisted';
 
 interface ScanningFilter {
@@ -372,9 +366,10 @@ function App() {
                     return newState;
                 });
 
+                // Pause scanning if user requested so.
                 while (scanningPaused) {
-                    await sleep(300);
-                    console.log('paused');
+                    await sleep(1000);
+                    console.info('Scan paused');
                 }
 
                 await sleep(Math.floor(Math.random() * (1000 - 600)) + 1000);
@@ -539,6 +534,14 @@ function App() {
                             <p>Displayed: {usersForDisplay.length}</p>
                             <p>Total: {state.results.length}</p>
                         </div>
+                        {/* Scan controls */}
+                        <div className='controls'>
+                            <button
+                                className='button-control button-pause'
+                                onClick={pauseScan}>
+                                    {scanningPaused ? 'Resume' : 'Pause'}
+                            </button>
+                        </div>
                         <div className='grow t-center'>
                             <p>Pages</p>
                             <a
@@ -603,21 +606,6 @@ function App() {
                         >
                             UNFOLLOW ({state.selectedResults.length})
                         </button>
-                        {/* Scan controls */}
-                        <div className='controls'>
-                            <button
-                                className='button-control button-pause'
-                                onClick={pauseScan}>
-                                    {scanningPaused ? 'Resume' : 'Pause'}
-                            </button>
-                            <button
-                                className='button-control
-                                button-stop'
-                                onClick={stopScan}
-                                disabled={state.status !== 'scanning'}>
-                                    Stop
-                            </button>
-                        </div>
                     </aside>
                     <article className='results-container'>
                         <nav className='tabs-container'>
